@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Clover Holding — Tableau de suivi des investissements</title>
+<title>Clover Holding — Suivi & Gestion</title>
 <meta name="theme-color" content="#0a0a0a">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Great+Vibes&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
-:root{--bg:#060606;--panel:#0c0c0c;--card:#101010;--gold:#d4af37;--gold2:#f3d27c;--line:rgba(212,175,55,.4);--line2:rgba(212,175,55,.22);--txt:#f5e9c8;--mut:#c9b578;--dim:#8a7a4a;--grn:#39d98a;--red:#e05555}
+:root{--bg:#060606;--gold:#d4af37;--gold2:#f3d27c;--line:rgba(212,175,55,.4);--line2:rgba(212,175,55,.22);--txt:#f5e9c8;--mut:#c9b578;--dim:#8a7a4a;--grn:#39d98a;--red:#e05555;--blu:#38bdf8}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);min-height:100vh;background:radial-gradient(1100px 500px at 50% -10%,rgba(212,175,55,.09),transparent 60%),var(--bg)}
 .wrap{max-width:1200px;margin:0 auto;padding:0 16px 60px}
-/* ===== HEADER ===== */
-.hero{position:relative;padding:26px 16px 20px;overflow:hidden}
+.hero{position:relative;padding:26px 16px 14px;overflow:hidden}
 .stripe{position:absolute;top:0;width:150px;height:110px;background:repeating-linear-gradient(45deg,var(--gold) 0 6px,#000 6px 14px);opacity:.85}
 .stripe.left{left:0;clip-path:polygon(0 0,100% 0,0 100%)}
 .stripe.right{right:0;clip-path:polygon(0 0,100% 0,100% 100%)}
@@ -22,15 +22,17 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);min-height:100vh;
 .titles{text-align:center}
 .t1{font-family:'Cinzel',serif;font-size:52px;font-weight:800;letter-spacing:14px;background:linear-gradient(180deg,#f7e29a,#c49a2c);-webkit-background-clip:text;background-clip:text;color:transparent}
 .t2{display:flex;align-items:center;gap:14px;justify-content:center;font-family:'Cinzel',serif;font-size:19px;letter-spacing:9px;color:#e8d79b;margin-top:2px}
-.t2 i{display:block;width:70px;height:1px;background:linear-gradient(90deg,transparent,var(--gold));}
+.t2 i{display:block;width:70px;height:1px;background:linear-gradient(90deg,transparent,var(--gold))}
 .t2 i:last-child{background:linear-gradient(90deg,var(--gold),transparent)}
 .tagline{display:flex;gap:12px;justify-content:center;align-items:center;margin-top:12px;flex-wrap:wrap}
 .tagline span{font-size:11px;font-weight:800;letter-spacing:2px;color:var(--gold2)}
 .tagline b{width:1px;height:14px;background:var(--line)}
 .slogan{font-family:'Great Vibes',cursive;font-size:27px;color:var(--gold2);text-align:right;line-height:1.25;text-shadow:0 2px 12px rgba(212,175,55,.25)}
-/* ===== PANELS ===== */
-.panel{border:1px solid var(--line);border-radius:16px;background:linear-gradient(180deg,#0d0d0d,#090909);padding:20px;margin-top:18px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
-.ptitle{text-align:center;font-size:19px;font-weight:800;letter-spacing:3px;color:var(--gold2);margin-bottom:16px}
+.tabs{display:flex;gap:10px;justify-content:center;margin:14px 0 4px;flex-wrap:wrap}
+.tab{padding:12px 24px;border-radius:99px;border:1px solid var(--line);background:#141008;color:var(--mut);font-family:inherit;font-weight:800;letter-spacing:1px;font-size:12px;cursor:pointer;transition:.15s}
+.tab.on{background:linear-gradient(180deg,#e7c86a,#b98f2a);color:#141414;box-shadow:0 6px 18px rgba(212,175,55,.25)}
+.panel{border:1px solid var(--line);border-radius:16px;background:linear-gradient(180deg,#0d0d0d,#090909);padding:20px;margin-top:16px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.ptitle{text-align:center;font-size:18px;font-weight:800;letter-spacing:2px;color:var(--gold2);margin-bottom:16px;text-transform:uppercase}
 .investors{display:grid;grid-template-columns:1fr 1fr;gap:14px;border:1px solid var(--line2);border-radius:12px;padding:14px;margin-bottom:16px}
 @media(max-width:800px){.investors{grid-template-columns:1fr}}
 .inv{display:flex;align-items:center;gap:12px}
@@ -40,28 +42,28 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);min-height:100vh;
 .inv .nm{font-size:17px;font-weight:800;color:#fff;margin-top:2px}
 .inv .amt{background:linear-gradient(180deg,#e7c86a,#b98f2a);color:#141414;border-radius:10px;padding:8px 18px;text-align:center;box-shadow:0 4px 14px rgba(212,175,55,.25)}
 .inv .amt .lbl{color:#3a2f10}
-.inv .amt .v{font-size:17px;font-weight:800;font-family:'Inter',monospace}
-.weeknav{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:12px}
+.inv .amt .v{font-size:17px;font-weight:800}
+.weeknav{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:12px;flex-wrap:wrap}
 .weeknav h3{font-size:14px;font-weight:800;letter-spacing:1px;color:var(--gold2);text-transform:capitalize;min-width:270px;text-align:center}
 .nav-ic{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:#141008;color:var(--gold2);cursor:pointer;font-size:16px;transition:.15s}
 .nav-ic:hover{background:rgba(212,175,55,.15)}
-/* ===== TABLE ===== */
+.gbtn{padding:9px 15px;border-radius:10px;border:1px solid var(--line);background:rgba(212,175,55,.12);color:var(--gold2);font-family:inherit;font-weight:800;font-size:12px;cursor:pointer;transition:.15s}
+.gbtn:hover{background:rgba(212,175,55,.22)}
 .tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
 table{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
 th,td{padding:10px 12px;border:1px solid var(--line2);text-align:center;white-space:nowrap}
 th{background:linear-gradient(180deg,#e7c86a,#b98f2a);color:#141414;font-size:10.5px;font-weight:800;letter-spacing:1.2px}
 th.grp{font-size:12px;letter-spacing:1.6px}
 td{background:#0b0b0b;color:var(--txt)}
-td.mono, .mono{font-family:'Inter',monospace;font-variant-numeric:tabular-nums}
+td.mono,.mono{font-variant-numeric:tabular-nums}
 tr.today td{outline:2px solid var(--gold);outline-offset:-2px;background:#171207}
 tr.tot td{background:linear-gradient(180deg,#e7c86a,#b98f2a);color:#141414;font-weight:800}
-.cell-in{width:96px;background:#1a1408;border:1px solid var(--line);border-radius:8px;color:var(--gold2);padding:7px 9px;text-align:right;font-family:'Inter',monospace;font-size:13px;outline:none}
-.cell-in:focus{border-color:var(--gold2);box-shadow:0 0 0 3px rgba(212,175,55,.18)}
-.in-name,.in-amt{background:#1a1408;border:1px solid var(--line);border-radius:8px;color:#fff;padding:6px 10px;font-family:inherit;font-size:15px;font-weight:800;outline:none;width:100%}
-.in-amt{width:90px;text-align:right;color:var(--gold2)}
-/* ===== CARDS ===== */
+.pos{color:var(--grn);font-weight:700}.neg{color:var(--red);font-weight:700}
+.bpos{background:rgba(57,217,138,.12);color:var(--grn);border:1px solid rgba(57,217,138,.4);padding:3px 12px;border-radius:999px;font-size:10px;font-weight:800;letter-spacing:1px}
+.bneg{background:rgba(224,85,85,.12);color:var(--red);border:1px solid rgba(224,85,85,.4);padding:3px 12px;border-radius:999px;font-size:10px;font-weight:800;letter-spacing:1px}
 .cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:16px}
-@media(max-width:900px){.cards{grid-template-columns:1fr}}
+.cards.two{grid-template-columns:1fr 1fr}
+@media(max-width:900px){.cards,.cards.two{grid-template-columns:1fr}}
 .card{border:1px solid var(--line);border-radius:14px;background:linear-gradient(180deg,#0d0d0d,#090909);padding:18px}
 .card h3{font-size:12px;font-weight:800;letter-spacing:2px;color:var(--gold2);margin-bottom:14px}
 .row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line2);font-size:13px;color:var(--mut)}
@@ -76,29 +78,69 @@ tr.tot td{background:linear-gradient(180deg,#e7c86a,#b98f2a);color:#141414;font-
 .obj-sub b{color:var(--mut)}
 .notes-text{min-height:120px;background:#141008;border:1px solid var(--line2);border-radius:10px;padding:12px;font-size:13px;line-height:1.6;color:var(--mut);white-space:pre-wrap}
 .notes-text .ph{color:var(--dim);font-style:italic}
-.notes-in{width:100%;min-height:120px;background:#1a1408;border:1px solid var(--line);border-radius:10px;padding:12px;font-family:inherit;font-size:13px;color:var(--gold2);outline:none;resize:vertical}
+.kgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:6px}
+.kcard{border:1px solid var(--line2);border-radius:12px;background:#0b0b0b;padding:14px;position:relative;overflow:hidden}
+.kcard::after{content:'';position:absolute;right:-26px;top:-26px;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,rgba(212,175,55,.12),transparent 70%)}
+.kcard .lbl{font-size:10px;letter-spacing:1.4px;font-weight:800;color:var(--mut);text-transform:uppercase}
+.kcard .val{font-size:21px;font-weight:800;margin-top:8px;font-variant-numeric:tabular-nums}
+.kcard .sub{font-size:11px;color:var(--dim);margin-top:6px}
+.chartbox{height:270px}
 footer{text-align:center;margin-top:26px;font-size:11px;font-weight:800;letter-spacing:3px;color:var(--gold);border-top:1px solid var(--line);padding-top:14px}
-/* ===== ADMIN ===== */
-.owner{position:fixed;right:18px;bottom:18px;z-index:60;padding:11px 18px;border-radius:99px;border:1px solid var(--line);background:#141008;color:var(--gold2);font-family:inherit;font-weight:800;font-size:12px;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.6)}
-.owner:hover{background:rgba(212,175,55,.15)}
-.adminbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;border:1px solid var(--line);border-radius:12px;background:#141008;padding:10px 12px;margin-top:16px}
-.adminbar .hint{flex:1;min-width:200px;font-size:11.5px;color:var(--mut)}
-.gbtn{padding:9px 15px;border-radius:10px;border:1px solid var(--line);background:rgba(212,175,55,.12);color:var(--gold2);font-family:inherit;font-weight:800;font-size:12px;cursor:pointer;transition:.15s}
-.gbtn:hover{background:rgba(212,175,55,.22)}
-.gbtn.red{border-color:rgba(224,85,85,.5);background:rgba(224,85,85,.1);color:#ff9b9b}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;z-index:100;opacity:0;pointer-events:none;transition:.2s}
-.overlay.open{opacity:1;pointer-events:auto}
-.modal{width:min(400px,92vw);background:#100d06;border:1px solid var(--line);border-radius:16px;padding:24px;text-align:center}
-.modal h4{color:var(--gold2);font-size:16px;margin-bottom:6px}
-.modal p{font-size:12px;color:var(--mut);margin-bottom:14px}
-.err{display:none;margin-top:10px;color:#ff9b9b;font-size:12px;font-weight:700}
-.err.show{display:block}
-#toasts{position:fixed;left:20px;bottom:20px;z-index:110;display:flex;flex-direction:column;gap:10px}
-.toast{padding:12px 16px;border-radius:12px;background:#141008;border:1px solid var(--line);border-left:4px solid var(--gold);font-size:13px;font-weight:600;color:var(--gold2);box-shadow:0 12px 34px rgba(0,0,0,.5);animation:tin .3s}
-@keyframes tin{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:none}}
+footer small{display:block;margin-top:8px;font-size:10px;letter-spacing:.5px;color:var(--dim);font-weight:600}
 </style>
 </head>
 <body>
+
+<!-- ══════════════════════════════════════════════════════════════
+     📋 FEUILLE N°1 — SUIVI DES INVESTISSEURS (Arouna / Eugène)
+     ✏️ GitHub : index.html → crayon ✏️ → changez les chiffres → Commit
+     ══════════════════════════════════════════════════════════════ -->
+<script type="text/plain" id="feuille">
+# ── RÉGLAGES ──
+investisseur1 = Arouna
+montant1 = 18
+investisseur2 = Eugène
+montant2 = 22
+objectif1 = 100
+objectif2 = 100
+objectifglobal = 500
+notes = Semaine de lancement — ensemble vers plus de réussite !
+
+# ── SUIVI DES BÉNÉFICES (une ligne par jour) ──
+date       | Arouna | Eugène
+17/08/2026 | 0      | 0
+18/08/2026 | 0      | 0
+19/08/2026 | 0      | 0
+20/08/2026 | 0      | 0
+21/08/2026 | 0      | 0
+22/08/2026 | 0      | 0
+23/08/2026 | 0      | 0
+</script>
+
+<!-- ══════════════════════════════════════════════════════════════
+     📋 FEUILLE N°2 — GESTION DE L'ENTREPRISE
+     ✏️ Une ligne par MOIS :  mois | recettes | dépenses
+     ✏️ Une ligne par CATÉGORIE de dépense :  catégorie | montant
+     ══════════════════════════════════════════════════════════════ -->
+<script type="text/plain" id="feuilleBiz">
+# ── RÉGLAGES ENTREPRISE ──
+nom_entreprise = Clover Holding
+objectif_annuel = 5000
+notes_entreprise = Suivi mensuel des recettes et dépenses de l'entreprise.
+
+# ── SUIVI MENSUEL (une ligne par mois) ──
+mois | recettes | dépenses
+08/2026 | 0 | 0
+
+# ── DÉPENSES PAR CATÉGORIE (une ligne par catégorie) ──
+catégorie | montant
+Loyer | 0
+Matériel | 0
+Transport | 0
+Publicité | 0
+Salaires | 0
+</script>
+<!-- ══════════════ FIN DES FEUILLES DE CALCUL ══════════════ -->
 
 <header class="hero">
   <div class="stripe left"></div><div class="stripe right"></div>
@@ -120,27 +162,27 @@ footer{text-align:center;margin-top:26px;font-size:11px;font-weight:800;letter-s
     </div>
     <div class="slogan">Vos investissements aujourd'hui,<br>votre liberté demain !</div>
   </div>
+  <div class="tabs">
+    <button class="tab on" data-sec="invest">💼 SUIVI DES INVESTISSEMENTS</button>
+    <button class="tab" data-sec="biz">🏢 GESTION ENTREPRISE</button>
+  </div>
 </header>
 
 <main class="wrap">
-  <div class="adminbar" id="adminBar" hidden>
-    <div class="hint">👑 <b>Mode propriétaire</b> : cliquez sur les valeurs pour les modifier. Ensuite « Publier » télécharge le fichier à remplacer sur votre hébergement pour que tout le monde voie la mise à jour.</div>
-    <button class="gbtn" id="btnPublish">💾 Publier (télécharger le site)</button>
-    <button class="gbtn" id="btnCSV">📤 Export CSV</button>
-    <button class="gbtn red" id="btnLock">🔒 Verrouiller</button>
-  </div>
 
+<!-- =============== SECTION 1 : INVESTISSEMENTS =============== -->
+<div id="sec-invest">
   <section class="panel">
-    <h2 class="ptitle">TABLEAU DE SUIVI DES INVESTISSEMENTS</h2>
+    <h2 class="ptitle">Tableau de suivi des investissements</h2>
     <div class="investors" id="invCards"></div>
     <div class="weeknav">
       <button class="nav-ic" id="wPrev">‹</button>
       <h3 id="weekLabel"></h3>
       <button class="nav-ic" id="wNext">›</button>
+      <button class="gbtn" id="btnCSV">📤 Export CSV</button>
     </div>
     <div class="tbl-wrap"><table id="tbl"></table></div>
   </section>
-
   <section class="cards">
     <div class="card">
       <h3>📊 RÉCAPITULATIF GLOBAL</h3>
@@ -150,13 +192,13 @@ footer{text-align:center;margin-top:26px;font-size:11px;font-weight:800;letter-s
     </div>
     <div class="card">
       <h3>🎯 OBJECTIFS</h3>
-      <div class="row"><span>Objectif mensuel <b id="objNameA"></b></span><span class="v" id="objABox"></span></div>
+      <div class="row"><span>Objectif mensuel <b id="objNameA"></b></span><span class="v gold" id="objA"></span></div>
       <div class="barwrap"><i id="barA"></i></div>
       <div class="obj-sub">Réalisé ce mois : <b id="mTotA">0,00 €</b> · <span id="barAP">—</span></div>
-      <div class="row"><span>Objectif mensuel <b id="objNameB"></b></span><span class="v" id="objBBox"></span></div>
+      <div class="row"><span>Objectif mensuel <b id="objNameB"></b></span><span class="v gold" id="objB"></span></div>
       <div class="barwrap"><i id="barB"></i></div>
       <div class="obj-sub">Réalisé ce mois : <b id="mTotB">0,00 €</b> · <span id="barBP">—</span></div>
-      <div class="row big"><span>🏆 Objectif global</span><span class="v gold" id="objGBox"></span></div>
+      <div class="row big"><span>🏆 Objectif global</span><span class="v gold" id="objG"></span></div>
       <div class="barwrap"><i id="barG"></i></div>
       <div class="obj-sub">Bénéfice total atteint · <span id="barGP">—</span></div>
     </div>
@@ -165,72 +207,138 @@ footer{text-align:center;margin-top:26px;font-size:11px;font-weight:800;letter-s
       <div id="notesBox"></div>
     </div>
   </section>
-
-  <footer>CLOVER HOLDING — ENSEMBLE VERS PLUS DE RÉUSSITE</footer>
-</main>
-
-<button class="owner" id="ownerBtn">🔒 Espace propriétaire</button>
-
-<div class="overlay" id="lockOverlay">
-  <div class="modal">
-    <h4>🔐 Espace propriétaire</h4>
-    <p>Entrez votre code pour modifier le tableau.</p>
-    <input class="cell-in" type="password" id="lockCode" placeholder="Code" style="width:70%;text-align:center;letter-spacing:3px">
-    <div style="margin-top:12px;display:flex;gap:10px;justify-content:center">
-      <button class="gbtn" id="lockOk">Déverrouiller</button>
-      <button class="gbtn red" id="lockCancel">Annuler</button>
-    </div>
-    <div class="err" id="lockErr">Code incorrect.</div>
-  </div>
 </div>
 
-<div id="toasts"></div>
+<!-- =============== SECTION 2 : GESTION ENTREPRISE =============== -->
+<div id="sec-biz" style="display:none">
+  <section class="panel">
+    <h2 class="ptitle">🏢 Tableau de bord de l'entreprise — <span id="bizName"></span></h2>
+    <div class="kgrid">
+      <div class="kcard"><div class="lbl">Recettes totales</div><div class="val pos" id="kRec">0,00 €</div><div class="sub">Encaissé depuis le début</div></div>
+      <div class="kcard"><div class="lbl">Dépenses totales</div><div class="val neg" id="kDep">0,00 €</div><div class="sub">Sorties d'argent</div></div>
+      <div class="kcard"><div class="lbl">Bénéfice net</div><div class="val" id="kNet">0,00 €</div><div class="sub">Recettes − dépenses</div></div>
+      <div class="kcard"><div class="lbl">Marge nette</div><div class="val gold" id="kMarg">—</div><div class="sub">Bénéfice / recettes</div></div>
+      <div class="kcard"><div class="lbl">Meilleur mois</div><div class="val pos" id="kBest" style="font-size:15px">—</div><div class="sub" id="kBestSub"></div></div>
+      <div class="kcard"><div class="lbl">Mois le plus difficile</div><div class="val neg" id="kWorst" style="font-size:15px">—</div><div class="sub" id="kWorstSub"></div></div>
+    </div>
+  </section>
+  <section class="cards">
+    <div class="card"><h3>📊 RECETTES vs DÉPENSES (par mois)</h3><div class="chartbox"><canvas id="bizBar"></canvas></div></div>
+    <div class="card"><h3>📈 BÉNÉFICE CUMULÉ</h3><div class="chartbox"><canvas id="bizLine"></canvas></div></div>
+    <div class="card"><h3>🍩 RÉPARTITION DES DÉPENSES</h3><div class="chartbox"><canvas id="bizDonut"></canvas></div></div>
+  </section>
+  <section class="panel">
+    <div class="weeknav"><h3 style="min-width:0">📒 Détail mois par mois</h3><button class="gbtn" id="btnCSVbiz">📤 Export CSV</button></div>
+    <div class="tbl-wrap"><table id="bizTbl" style="min-width:700px"></table></div>
+  </section>
+  <section class="cards two">
+    <div class="card">
+      <h3>🏆 OBJECTIF ANNUEL</h3>
+      <div class="row"><span>Objectif de bénéfice</span><span class="v gold" id="bizObj">0,00 €</span></div>
+      <div class="barwrap"><i id="barBiz"></i></div>
+      <div class="obj-sub">Bénéfice actuel : <b id="bizObjDone">0,00 €</b> · <span id="barBizP">—</span></div>
+      <div class="row"><span>Reste à atteindre</span><span class="v" id="bizObjLeft">0,00 €</span></div>
+    </div>
+    <div class="card">
+      <h3>📝 NOTES ENTREPRISE</h3>
+      <div id="bizNotesBox"></div>
+    </div>
+  </section>
+</div>
 
-<script type="application/json" id="dataStore">
-{"investors":[{"name":"Arouna","amount":18},{"name":"Eugène","amount":22}],"objectives":{"m":[0,0],"global":0},"notes":"","weeks":{}}
-</script>
+<footer>CLOVER HOLDING — ENSEMBLE VERS PLUS DE RÉUSSITE
+  <small>👑 Mise à jour réservée au propriétaire : éditez les blocs « FEUILLE » et « FEUILLE ENTREPRISE » du fichier index.html sur GitHub.</small>
+</footer>
+</main>
 
 <script>
+/* ========== OUTILS COMMUNS ========== */
 const $=id=>document.getElementById(id);
 const fmt=new Intl.NumberFormat("fr-FR",{style:"currency",currency:"EUR"});
-const ADMIN_CODE="CLOVER2026";
-const LS="clover_inv_v1";
-let data=null;
-try{data=JSON.parse(localStorage.getItem(LS));}catch(e){}
-if(!data||!data.investors){try{data=JSON.parse($("dataStore").textContent);}catch(e){}}
-if(!data||!data.investors)data={investors:[{name:"Arouna",amount:18},{name:"Eugène",amount:22}],objectives:{m:[0,0],global:0},notes:"",weeks:{}};
-let admin=sessionStorage.getItem("ch_owner")==="1";
-let weekOffset=0;
 const pad=n=>String(n).padStart(2,"0");
+const num=s=>{const n=parseFloat(String(s).trim().replace(/\s/g,"").replace(",","."));return isNaN(n)?0:n;};
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
+const pct=v=>v.toLocaleString("fr-FR",{maximumFractionDigits:1})+" %";
 const keyOf=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
 const parseKey=k=>{const p=k.split("-").map(Number);return new Date(p[0],p[1]-1,p[2]);};
 const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x;};
 const mondayOf=d=>{const x=new Date(d);x.setHours(0,0,0,0);x.setDate(x.getDate()-((x.getDay()+6)%7));return x;};
-const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
-const save=()=>localStorage.setItem(LS,JSON.stringify(data));
 const Z=[0,0,0,0,0,0,0];
-const getV=k=>(data.weeks[k]&&data.weeks[k].v)||[Z.slice(),Z.slice()];
-const ensureWeek=k=>{if(!data.weeks[k])data.weeks[k]={v:[Z.slice(),Z.slice()]};return data.weeks[k];};
-const weekStart=()=>addDays(mondayOf(new Date()),weekOffset*7);
 const DOW=["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"];
 const DOWS=["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"];
+
+/* ========== LECTURE FEUILLE 1 (investisseurs) ========== */
+function lireFeuille(){
+  const d={investors:[{name:"Investisseur 1",amount:0},{name:"Investisseur 2",amount:0}],objectives:{m:[0,0],global:0},notes:"",weeks:{}};
+  for(const raw of $("feuille").textContent.split(/\r?\n/)){
+    const line=raw.trim();
+    if(!line||line.startsWith("#"))continue;
+    if(line.includes("|")){
+      const c=line.split("|").map(x=>x.trim());
+      const m=c[0].match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+      if(m&&c.length>=3){
+        const date=new Date(+m[3],+m[2]-1,+m[1]);
+        const wk=keyOf(mondayOf(date)), idx=(date.getDay()+6)%7;
+        if(!d.weeks[wk])d.weeks[wk]={v:[Z.slice(),Z.slice()]};
+        d.weeks[wk].v[0][idx]=num(c[1]);
+        d.weeks[wk].v[1][idx]=num(c[2]||0);
+      }
+    }else if(line.includes("=")){
+      const i=line.indexOf("="), k=line.slice(0,i).trim().toLowerCase(), val=line.slice(i+1).trim();
+      if(k==="investisseur1")d.investors[0].name=val;
+      else if(k==="investisseur2")d.investors[1].name=val;
+      else if(k==="montant1")d.investors[0].amount=num(val);
+      else if(k==="montant2")d.investors[1].amount=num(val);
+      else if(k==="objectif1")d.objectives.m[0]=num(val);
+      else if(k==="objectif2")d.objectives.m[1]=num(val);
+      else if(k==="objectifglobal")d.objectives.global=num(val);
+      else if(k==="notes")d.notes=val;
+    }
+  }
+  return d;
+}
+/* ========== LECTURE FEUILLE 2 (entreprise) ========== */
+function lireFeuilleBiz(){
+  const d={name:"Mon Entreprise",objective:0,notes:"",months:[],cats:[]};
+  let mode=0;
+  for(const raw of $("feuilleBiz").textContent.split(/\r?\n/)){
+    const line=raw.trim();
+    if(!line)continue;
+    if(line.startsWith("#")){mode=/MENSUEL/i.test(line)?1:/CATÉGORIE/i.test(line)?2:0;continue;}
+    if(line.includes("|")){
+      const c=line.split("|").map(x=>x.trim());
+      const m=c[0].match(/(\d{1,2})\/(\d{4})/);
+      if(mode===1&&m)d.months.push({key:m[2]+"-"+pad(+m[1]),rec:num(c[1]),dep:num(c[2]||0)});
+      else if(mode===2&&c.length>=2&&!/catégorie/i.test(c[0]))d.cats.push({label:c[0],amount:num(c[1])});
+    }else if(line.includes("=")){
+      const i=line.indexOf("="), k=line.slice(0,i).trim().toLowerCase(), v=line.slice(i+1).trim();
+      if(k==="nom_entreprise")d.name=v;
+      else if(k==="objectif_annuel")d.objective=num(v);
+      else if(k==="notes_entreprise")d.notes=v;
+    }
+  }
+  d.months.sort((a,b)=>a.key.localeCompare(b.key));
+  return d;
+}
+const data=lireFeuille();
+const BIZ=lireFeuilleBiz();
+let weekOffset=0;
+const weekStart=()=>addDays(mondayOf(new Date()),weekOffset*7);
+const getV=k=>(data.weeks[k]&&data.weeks[k].v)||[Z.slice(),Z.slice()];
 function monthRun(inv,upto){let s=0;for(const k in data.weeks){const wk=parseKey(k),v=data.weeks[k].v[inv];for(let i=0;i<7;i++){const d=addDays(wk,i);if(d<=upto&&d.getMonth()===upto.getMonth()&&d.getFullYear()===upto.getFullYear())s+=+v[i]||0;}}return s;}
 function allTotal(inv){let s=0;for(const k in data.weeks)s+=data.weeks[k].v[inv].reduce((a,b)=>a+(+b||0),0);return s;}
-function toast(msg){const t=document.createElement("div");t.className="toast";t.textContent=msg;$("toasts").appendChild(t);setTimeout(()=>{t.style.opacity="0";t.style.transition="opacity .4s";setTimeout(()=>t.remove(),400);},4200);}
 
+/* ========== RENDUS SECTION 1 ========== */
 function renderInvestors(){
   $("invCards").innerHTML=data.investors.map((inv,i)=>
-    '<div class="inv"><div class="ic">👤</div><div class="who"><div class="lbl">INVESTISSEUR '+(i+1)+'</div>'+
-    (admin?'<input class="in-name" data-i="'+i+'" value="'+esc(inv.name)+'">':'<div class="nm">'+esc(inv.name)+'</div>')+
-    '</div><div class="amt"><div class="lbl">MONTANT INVESTI</div>'+(admin?'<input class="in-amt" data-i="'+i+'" value="'+inv.amount+'" inputmode="decimal">':'<div class="v">'+fmt.format(inv.amount)+'</div>')+'</div></div>'
+    '<div class="inv"><div class="ic">👤</div><div class="who"><div class="lbl">INVESTISSEUR '+(i+1)+'</div><div class="nm">'+esc(inv.name)+'</div></div><div class="amt"><div class="lbl">MONTANT INVESTI</div><div class="v">'+fmt.format(inv.amount)+'</div></div></div>'
   ).join("");
 }
-
 function renderTable(){
-  const ws=weekStart(),we=addDays(ws,6),k=keyOf(ws),v=getV(k),tk=keyOf(new Date());
+  const ws=weekStart(),we=addDays(ws,6),v=getV(keyOf(ws)),tk=keyOf(new Date());
   $("weekLabel").textContent="Semaine du "+ws.toLocaleDateString("fr-FR",{day:"2-digit",month:"long"})+" au "+we.toLocaleDateString("fr-FR",{day:"2-digit",month:"long",year:"numeric"});
   let h='<tr><th>📅 DATE</th><th>📅 JOUR</th>';
-  for(let i=0;i<2;i++)h+='<th colspan="3" class="grp" id="g'+i+'">'+esc(data.investors[i].name.toUpperCase())+' ('+fmt.format(data.investors[i].amount)+')</th>';
+  for(let i=0;i<2;i++)h+='<th colspan="3" class="grp">'+esc(data.investors[i].name.toUpperCase())+' ('+fmt.format(data.investors[i].amount)+')</th>';
   h+='</tr><tr><th></th><th></th>';
   for(let i=0;i<2;i++)h+='<th>BÉNÉFICE DU JOUR</th><th>TOTAL SEMAINE</th><th>TOTAL MOIS</th>';
   h+='</tr>';
@@ -238,126 +346,113 @@ function renderTable(){
     const d=addDays(ws,i);
     h+='<tr class="'+(keyOf(d)===tk?'today':'')+'"><td class="mono">'+DOWS[i]+' '+d.toLocaleDateString("fr-FR")+'</td><td>'+DOW[i]+'</td>';
     for(let inv=0;inv<2;inv++){
-      const val=v[inv][i];
-      h+='<td>'+(admin?'<input class="cell-in" data-inv="'+inv+'" data-day="'+i+'" value="'+(val||"")+'" placeholder="0,00" inputmode="decimal">':'<span class="mono">'+fmt.format(val)+'</span>')+'</td>';
-      h+='<td class="mono" id="w'+inv+'_'+i+'">—</td><td class="mono" id="m'+inv+'_'+i+'">—</td>';
+      let run=0;for(let j=0;j<=i;j++)run+=+v[inv][j]||0;
+      h+='<td class="mono">'+fmt.format(v[inv][i])+'</td><td class="mono">'+fmt.format(run)+'</td><td class="mono">'+fmt.format(monthRun(inv,d))+'</td>';
     }
     h+='</tr>';
   }
   h+='<tr class="tot"><td colspan="2">∑ TOTAL SEMAINE</td>';
-  for(let inv=0;inv<2;inv++)h+='<td class="mono" id="tw'+inv+'">—</td><td class="mono" id="tws'+inv+'">—</td><td class="mono" id="tm'+inv+'">—</td>';
+  for(let inv=0;inv<2;inv++){
+    const wsum=v[inv].reduce((a,b)=>a+(+b||0),0);
+    h+='<td class="mono">'+fmt.format(wsum)+'</td><td class="mono">'+fmt.format(wsum)+'</td><td class="mono">'+fmt.format(monthRun(inv,we))+'</td>';
+  }
   h+='</tr>';
   $("tbl").innerHTML=h;
 }
-
-function renderObjectives(){
-  $("objNameA").textContent=data.investors[0].name;
-  $("objNameB").textContent=data.investors[1].name;
-  $("objABox").innerHTML=admin?'<input class="cell-in" id="objInA" value="'+(data.objectives.m[0]||"")+'" placeholder="0,00" inputmode="decimal" style="width:90px">':'<span class="gold">'+fmt.format(data.objectives.m[0])+'</span>';
-  $("objBBox").innerHTML=admin?'<input class="cell-in" id="objInB" value="'+(data.objectives.m[1]||"")+'" placeholder="0,00" inputmode="decimal" style="width:90px">':'<span class="gold">'+fmt.format(data.objectives.m[1])+'</span>';
-  $("objGBox").innerHTML=admin?'<input class="cell-in" id="objInG" value="'+(data.objectives.global||"")+'" placeholder="0,00" inputmode="decimal" style="width:100px">':'<span>'+fmt.format(data.objectives.global)+'</span>';
-}
-
-function renderNotes(){
-  $("notesBox").innerHTML=admin
-    ?'<textarea class="notes-in" id="notesTa" placeholder="Écrivez ici vos observations, les évolutions, les stratégies, etc…">'+esc(data.notes)+'</textarea>'
-    :'<div class="notes-text">'+(data.notes?esc(data.notes):'<span class="ph">Écrivez ici vos observations, les évolutions, les stratégies, etc…</span>')+'</div>';
-}
-
-function setBar(id,val,obj){$(id).style.width=(obj>0?Math.min(100,val/obj*100):0)+"%";$(id+"P").textContent=obj>0?Math.round(val/obj*100)+" %":"—";}
-
-function updateDerived(){
-  const ws=weekStart(),v=getV(keyOf(ws)),run=[0,0];
-  for(let i=0;i<7;i++){
-    const d=addDays(ws,i);
-    for(let inv=0;inv<2;inv++){
-      run[inv]+=+v[inv][i]||0;
-      $("w"+inv+"_"+i).textContent=fmt.format(run[inv]);
-      $("m"+inv+"_"+i).textContent=fmt.format(monthRun(inv,d));
-    }
-  }
-  for(let inv=0;inv<2;inv++){
-    const wsum=run[inv];
-    $("tw"+inv).textContent=fmt.format(wsum);
-    $("tws"+inv).textContent=fmt.format(wsum);
-    $("tm"+inv).textContent=fmt.format(monthRun(inv,addDays(ws,6)));
-  }
+function setBar(id,val,obj){$(id).style.width=(obj>0?Math.min(100,val/obj*100):0)+"%";$(id+"P").textContent=obj>0?pct(val/obj*100):"—";}
+function renderBottom(){
   $("totA").textContent=fmt.format(allTotal(0));
   $("totB").textContent=fmt.format(allTotal(1));
   $("totAll").textContent=fmt.format(allTotal(0)+allTotal(1));
   $("nameA0").textContent=data.investors[0].name;
   $("nameB0").textContent=data.investors[1].name;
+  $("objNameA").textContent=data.investors[0].name;
+  $("objNameB").textContent=data.investors[1].name;
+  $("objA").textContent=fmt.format(data.objectives.m[0]);
+  $("objB").textContent=fmt.format(data.objectives.m[1]);
+  $("objG").textContent=fmt.format(data.objectives.global);
   const now=new Date(),mA=monthRun(0,now),mB=monthRun(1,now);
   $("mTotA").textContent=fmt.format(mA);
   $("mTotB").textContent=fmt.format(mB);
-  setBar("barA",mA,+data.objectives.m[0]||0);
-  setBar("barB",mB,+data.objectives.m[1]||0);
-  setBar("barG",allTotal(0)+allTotal(1),+data.objectives.global||0);
+  setBar("barA",mA,data.objectives.m[0]);
+  setBar("barB",mB,data.objectives.m[1]);
+  setBar("barG",allTotal(0)+allTotal(1),data.objectives.global);
+  $("notesBox").innerHTML='<div class="notes-text">'+(data.notes?esc(data.notes):'<span class="ph">Écrivez ici vos observations…</span>')+'</div>';
 }
 
-function setAdminUI(){
-  $("adminBar").hidden=!admin;
-  $("ownerBtn").textContent=admin?"👑 Mode propriétaire actif":"🔒 Espace propriétaire";
+/* ========== RENDUS SECTION 2 (entreprise) ========== */
+const monthLabel=k=>{const p=k.split("-").map(Number);return new Date(p[0],p[1]-1,1).toLocaleDateString("fr-FR",{month:"long",year:"numeric"});};
+function renderBiz(){
+  $("bizName").textContent=BIZ.name;
+  const tR=BIZ.months.reduce((a,m)=>a+m.rec,0), tD=BIZ.months.reduce((a,m)=>a+m.dep,0), net=tR-tD;
+  $("kRec").textContent=fmt.format(tR);
+  $("kDep").textContent=fmt.format(tD);
+  const kn=$("kNet");kn.textContent=(net>=0?"+":"")+fmt.format(net);kn.className="val "+(net>=0?"pos":"neg");
+  $("kMarg").textContent=tR>0?pct(net/tR*100):"—";
+  let best=null,worst=null;
+  BIZ.months.forEach(m=>{const n=m.rec-m.dep;if(!best||n>best.n)best={m,n};if(!worst||n<worst.n)worst={m,n};});
+  if(best){$("kBest").textContent=(best.n>=0?"+":"")+fmt.format(best.n);$("kBestSub").textContent=monthLabel(best.m.key);}
+  if(worst){$("kWorst").textContent=(worst.n>=0?"+":"")+fmt.format(worst.n);$("kWorstSub").textContent=monthLabel(worst.m.key);}
+  $("bizObj").textContent=fmt.format(BIZ.objective);
+  $("bizObjDone").textContent=(net>=0?"+":"")+fmt.format(net);
+  $("bizObjLeft").textContent=fmt.format(Math.max(0,BIZ.objective-net));
+  setBar("barBiz",Math.max(0,net),BIZ.objective);
+  $("bizNotesBox").innerHTML='<div class="notes-text">'+(BIZ.notes?esc(BIZ.notes):'<span class="ph">Vos observations sur l'entreprise…</span>')+'</div>';
+  let h='<tr><th>MOIS</th><th>RECETTES</th><th>DÉPENSES</th><th>BÉNÉFICE / PERTE</th><th>MARGE</th><th>STATUT</th></tr>';
+  if(!BIZ.months.length)h+='<tr><td colspan="6" class="mono">Aucun mois renseigné — ajoutez des lignes dans « FEUILLE ENTREPRISE ».</td></tr>';
+  BIZ.months.slice().reverse().forEach(m=>{
+    const n=m.rec-m.dep, mg=m.rec>0?n/m.rec*100:0;
+    h+='<tr><td class="mono" style="text-transform:capitalize">'+monthLabel(m.key)+'</td><td class="mono pos">'+fmt.format(m.rec)+'</td><td class="mono neg">'+fmt.format(m.dep)+'</td><td class="mono '+(n>=0?"pos":"neg")+'">'+(n>=0?"+":"")+fmt.format(n)+'</td><td class="mono">'+pct(mg)+'</td><td>'+(n>=0?'<span class="bpos">BÉNÉFICE ✅</span>':'<span class="bneg">PERTE ❌</span>')+'</td></tr>';
+  });
+  const tN=tR-tD;
+  h+='<tr class="tot"><td>TOTAL</td><td class="mono">'+fmt.format(tR)+'</td><td class="mono">'+fmt.format(tD)+'</td><td class="mono">'+(tN>=0?"+":"")+fmt.format(tN)+'</td><td class="mono">'+pct(tR>0?tN/tR*100:0)+'</td><td>'+(tN>=0?"✅":"❌")+'</td></tr>';
+  $("bizTbl").innerHTML=h;
+  buildBizCharts();
 }
-function renderAll(){renderInvestors();renderTable();renderObjectives();renderNotes();updateDerived();setAdminUI();}
+function baseOpts(){return{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:"#c9b578",usePointStyle:true,boxWidth:8}},tooltip:{backgroundColor:"#141008",borderColor:"#d4af37",borderWidth:1,titleColor:"#f3d27c",bodyColor:"#c9b578"}},scales:{x:{ticks:{color:"#8a7a4a"},grid:{display:false}},y:{ticks:{color:"#8a7a4a",callback:v=>v+" €"},grid:{color:"rgba(212,175,55,.08)"}}}};}
+function buildBizCharts(){
+  if(!window.Chart)return;
+  ["bizBar","bizLine","bizDonut"].forEach(id=>{const c=Chart.getChart(id);if(c)c.destroy();});
+  const labels=BIZ.months.map(m=>monthLabel(m.key));
+  const recs=BIZ.months.map(m=>m.rec), deps=BIZ.months.map(m=>m.dep);
+  let cum=0;const cums=BIZ.months.map(m=>cum+=m.rec-m.dep);
+  new Chart($("bizBar"),{data:{labels,datasets:[
+    {type:"bar",label:"Recettes",data:recs,backgroundColor:"rgba(57,217,138,.75)",borderRadius:5,maxBarThickness:34},
+    {type:"bar",label:"Dépenses",data:deps,backgroundColor:"rgba(224,85,85,.75)",borderRadius:5,maxBarThickness:34}]},options:baseOpts()});
+  new Chart($("bizLine"),{type:"line",data:{labels,datasets:[{label:"Bénéfice cumulé (€)",data:cums,borderColor:"#f3d27c",backgroundColor:"rgba(243,210,124,.25)",fill:true,tension:.35,pointRadius:4,pointBackgroundColor:"#f3d27c"}]},options:baseOpts()});
+  const cats=BIZ.cats.filter(c=>c.amount>0);
+  new Chart($("bizDonut"),{type:"doughnut",data:{labels:cats.length?cats.map(c=>c.label):["Aucune dépense"],datasets:[{data:cats.length?cats.map(c=>c.amount):[1],backgroundColor:["#d4af37","#f3d27c","#8a6d1f","#39d98a","#e05555","#38bdf8","#c9b578","#94a3b8"],borderColor:"#0a0a0a",borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"bottom",labels:{color:"#c9b578",boxWidth:10}}}}});
+}
 
-/* ===== Éditions ===== */
-document.addEventListener("input",e=>{
-  const t=e.target;
-  if(t.classList.contains("cell-in")&&t.dataset.inv!==undefined){
-    const val=parseFloat(String(t.value).replace(",","."))||0;
-    ensureWeek(keyOf(weekStart())).v[+t.dataset.inv][+t.dataset.day]=val;
-    save();updateDerived();
-  }else if(t.id==="objInA"){data.objectives.m[0]=parseFloat(String(t.value).replace(",","."))||0;save();updateDerived();}
-  else if(t.id==="objInB"){data.objectives.m[1]=parseFloat(String(t.value).replace(",","."))||0;save();updateDerived();}
-  else if(t.id==="objInG"){data.objectives.global=parseFloat(String(t.value).replace(",","."))||0;save();updateDerived();}
-  else if(t.classList.contains("in-name")){data.investors[+t.dataset.i].name=t.value;save();const g=$("g"+t.dataset.i);if(g)g.textContent=t.value.toUpperCase()+" ("+fmt.format(data.investors[+t.dataset.i].amount)+")";$("objName"+(t.dataset.i==="0"?"A":"B")).textContent=t.value;updateDerived();}
-  else if(t.classList.contains("in-amt")){data.investors[+t.dataset.i].amount=parseFloat(String(t.value).replace(",","."))||0;save();const g=$("g"+t.dataset.i);if(g)g.textContent=data.investors[+t.dataset.i].name.toUpperCase()+" ("+fmt.format(data.investors[+t.dataset.i].amount)+")";}
-  else if(t.id==="notesTa"){data.notes=t.value;save();}
-});
+/* ========== ONGLETS ========== */
+document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{
+  const s=b.dataset.sec;
+  $("sec-invest").style.display=s==="invest"?"":"none";
+  $("sec-biz").style.display=s==="biz"?"":"none";
+  document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("on",x===b));
+  if(s==="biz")buildBizCharts();
+}));
 
-/* ===== Navigation semaines ===== */
-$("wPrev").addEventListener("click",()=>{weekOffset--;renderTable();updateDerived();});
-$("wNext").addEventListener("click",()=>{weekOffset++;renderTable();updateDerived();});
-
-/* ===== Verrou / déverrou ===== */
-$("ownerBtn").addEventListener("click",()=>{
-  if(admin){admin=false;sessionStorage.removeItem("ch_owner");renderAll();toast("🔒 Site verrouillé (lecture seule pour les visiteurs).");}
-  else{$("lockOverlay").classList.add("open");setTimeout(()=>$("lockCode").focus(),120);}
-});
-$("lockCancel").addEventListener("click",()=>$("lockOverlay").classList.remove("open"));
-$("lockOk").addEventListener("click",()=>{
-  if($("lockCode").value===ADMIN_CODE){admin=true;sessionStorage.setItem("ch_owner","1");$("lockCode").value="";$("lockOverlay").classList.remove("open");renderAll();toast("👑 Mode propriétaire activé.");}
-  else{$("lockErr").classList.add("show");$("lockCode").value="";}
-});
-$("lockCode").addEventListener("keydown",e=>{if(e.key==="Enter")$("lockOk").click();});
-$("btnLock").addEventListener("click",()=>$("ownerBtn").click());
-
-/* ===== Publier : télécharge le site avec les données intégrées ===== */
-$("btnPublish").addEventListener("click",()=>{
-  const was=admin;admin=false;setAdminUI();renderInvestors();renderTable();renderObjectives();renderNotes();updateDerived();
-  $("dataStore").textContent=JSON.stringify(data);
-  const html="<!DOCTYPE html>\n"+document.documentElement.outerHTML;
-  admin=was;setAdminUI();renderAll();
-  const a=document.createElement("a");
-  a.href=URL.createObjectURL(new Blob([html],{type:"text/html"}));
-  a.download="index.html";a.click();URL.revokeObjectURL(a.href);
-  toast("💾 Fichier téléchargé ! Remplacez index.html sur Netlify/GitHub pour publier la mise à jour.");
-});
-
-/* ===== Export CSV ===== */
+/* ========== NAVIGATION & EXPORTS ========== */
+$("wPrev").addEventListener("click",()=>{weekOffset--;renderTable();});
+$("wNext").addEventListener("click",()=>{weekOffset++;renderTable();});
+function dlCSV(rows,name){
+  const csv="\uFEFF"+rows.map(r=>r.join(";")).join("\r\n");
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));a.download=name;a.click();URL.revokeObjectURL(a.href);
+}
 $("btnCSV").addEventListener("click",()=>{
   const ws=weekStart(),v=getV(keyOf(ws));
   const rows=[["Date","Jour",data.investors[0].name+" (€)",data.investors[1].name+" (€)"]];
   for(let i=0;i<7;i++)rows.push([addDays(ws,i).toLocaleDateString("fr-FR"),DOW[i],String(v[0][i]).replace(".",","),String(v[1][i]).replace(".",",")]);
-  const csv="\uFEFF"+rows.map(r=>r.join(";")).join("\r\n");
-  const a=document.createElement("a");
-  a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
-  a.download="clover_semaine_"+keyOf(ws)+".csv";a.click();URL.revokeObjectURL(a.href);
-  toast("📤 Export CSV téléchargé.");
+  dlCSV(rows,"clover_semaine_"+keyOf(ws)+".csv");
+});
+$("btnCSVbiz").addEventListener("click",()=>{
+  const rows=[["Mois","Recettes (€)","Dépenses (€)","Bénéfice (€)"]];
+  BIZ.months.forEach(m=>rows.push([monthLabel(m.key),String(m.rec).replace(".",","),String(m.dep).replace(".",","),String(m.rec-m.dep).replace(".",",")]));
+  dlCSV(rows,"clover_entreprise.csv");
 });
 
-renderAll();
+renderInvestors();renderTable();renderBottom();renderBiz();
 </script>
 </body>
 </html>
